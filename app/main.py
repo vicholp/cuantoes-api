@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     ANTHROPIC_API_KEY: str
 
-settings = Settings(_env_file='prod.env', _env_file_encoding='utf-8')
+settings = Settings(_env_file='.env', _env_file_encoding='utf-8')
 
 class Mongo:
     def __init__(self):
@@ -55,7 +55,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://192.168.1.8:5173","http://localhost:5173",],
+    allow_origins=["http://192.168.1.8:5173","http://localhost:5173","https://cuantoes.home.vlineros.cl"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
