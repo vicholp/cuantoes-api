@@ -1,0 +1,5 @@
+fastapi[standard]
+pydantic
+pymongo
+pydantic-settings
+anthropic

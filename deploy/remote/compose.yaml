@@ -1,0 +1,46 @@
+name: ${APP_NAME}-${ENVIRONMENT}
+
+services:
+  api:
+    image: ${DOCKER_REGISTRY}/${GITHUB_REPO}-python:${ENVIRONMENT}-latest
+    command: fastapi run app/main.py --host 0.0.0.0
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik
+    env_file:
+      - .env
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.docker.network=traefik"
+      - "traefik.http.services.${APP_NAME}-${ENVIRONMENT}-backend.loadbalancer.server.port=8000"
+
+      - "traefik.http.routers.insecure-${APP_NAME}-${ENVIRONMENT}-backend.entrypoints=webinsecure"
+      - "traefik.http.routers.insecure-${APP_NAME}-${ENVIRONMENT}-backend.rule=Host(`${TRAEFIK_BACKEND_HOST}`)"
+      - "traefik.http.routers.insecure-${APP_NAME}-${ENVIRONMENT}-backend.middlewares=redirectToHttps@file"
+
+      - "traefik.http.routers.${APP_NAME}-${ENVIRONMENT}-backend.entrypoints=websecure"
+      - "traefik.http.routers.${APP_NAME}-${ENVIRONMENT}-backend.rule=Host(`${TRAEFIK_BACKEND_HOST}`)"
+      - "traefik.http.routers.${APP_NAME}-${ENVIRONMENT}-backend.tls=true"
+      - "traefik.http.routers.${APP_NAME}-${ENVIRONMENT}-backend.tls.certresolver=myresolver"
+
+  db:
+    image: mongo:8
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+    networks:
+      - default
+    env_file:
+      - .env
+
+volumes:
+  mongo_data:
+
+networks:
+  traefik:
+    external: true

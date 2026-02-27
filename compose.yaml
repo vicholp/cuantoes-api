@@ -1,0 +1,27 @@
+services:
+  db:
+    image: mongo:8
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    
+  api:
+    env_file: 
+      - .env
+    build:
+      context: .
+      dockerfile: ./deploy/local/python.Dockerfile
+    command: fastapi dev app/main.py --host 0.0.0.0
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    depends_on:
+      - db
+
+volumes:
+  mongo-data:
