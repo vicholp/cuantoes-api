@@ -1,5 +1,5 @@
-fastapi[standard]
-pydantic
-pymongo
-pydantic-settings
-anthropic
+fastapi[standard]==0.133.1
+pydantic==2.12.5
+pymongo==4.16.0
+pydantic-settings==2.13.1
+anthropic==0.84.0

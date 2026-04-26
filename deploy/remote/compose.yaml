@@ -1,7 +1,7 @@
 name: ${APP_NAME}-${ENVIRONMENT}
 
 services:
-  api:
+  api:  
     image: ${DOCKER_REGISTRY}/${GITHUB_REPO}-python:${ENVIRONMENT}-latest
     command: fastapi run app/main.py --host 0.0.0.0
     restart: unless-stopped
