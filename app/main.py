@@ -102,7 +102,9 @@ def create_receipt(body: dict):
 
     items = items.get('items', [])
 
-    receipt = mongo.receipts.insert_one({})
+    receipt = mongo.receipts.insert_one({
+        "image_base64": body['image_base64']
+    })
 
     receipt_id = str(receipt.inserted_id)
 
