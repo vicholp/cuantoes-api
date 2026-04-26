@@ -109,11 +109,13 @@ def create_receipt(body: dict):
     receipt_id = str(receipt.inserted_id)
 
     for item in items:
-        for i in range(item.get("quantity", 1)):
+        quantity = item.get("quantity", 1) if isinstance(item.get("quantity", 1), int) else 1
+
+        for i in range(quantity):
             mongo.receipt_items.insert_one({
                 "receipt_id": receipt_id,
                 "name": item["name"],
-                "price": item["total_price"] / item["quantity"]
+                "price": item["total_price"] / quantity
             })
     
     return {"receipt_id": receipt_id}
