@@ -64,9 +64,9 @@ app.add_middleware(
 
 def get_receipt_items_from_image(image_base64: str):
     message = client.messages.create(
-        model="claude-sonnet-4-6",
+        model="claude-sonnet-5-5",
         max_tokens=20000,
-        temperature=1,
+        thinking =  {"type": "between_tools"},
         messages=[
             {
                 "role": "user",
