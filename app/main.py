@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 import anthropic
 import json
 from bson import ObjectId
+from datetime import datetime, timezone
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
@@ -55,7 +56,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://192.168.1.8:5173","http://localhost:5173","https://cuantoes.home.vlineros.cl"],
+    allow_origins=["http://192.168.1.8:5173","http://localhost:5173","https://cuantoes.home.vlineros.cl","https://cuanto-es.cl"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -103,7 +104,8 @@ def create_receipt(body: dict):
     items = items.get('items', [])
 
     receipt = mongo.receipts.insert_one({
-        "image_base64": body['image_base64']
+        "image_base64": body['image_base64'],
+        "created_at": datetime.now(timezone.utc)
     })
 
     receipt_id = str(receipt.inserted_id)
